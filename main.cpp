@@ -27,7 +27,7 @@ int main(int argc, char* argv[]) {
     Stack<char>* postfixExp = postExp->form(*infixExp);
     cout << "Result: " << endl;
     postfixExp->print();
-
+    cout << "test";
 
 
 

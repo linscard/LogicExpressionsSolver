@@ -10,7 +10,7 @@ public:
     PostFixExpression();
     Stack<char>* form(Stack<char> &inFixExp);
 private:
-    bool operatorIsHigherLastOperator(char item, Stack<char> &operatorStack);
+    bool shouldReorganize(char item, Stack<char> &operatorStack);
     void solveLastExpression(Stack<char> &operatorStack, Stack<char> &operandStack, Stack<char> &inFixStack,char &item);
 
 };

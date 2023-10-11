@@ -15,64 +15,70 @@ Stack<char> *PostFixExpression::form(Stack<char> &inFixStack) {
 
         if (Utils::isInteger(item)){
             operandStack->push(item);
-        } else if (item != spaceDelimiter){
-            if(operatorIsHigherLastOperator(item, *operatorStack)) {
+        } else if(!shouldReorganize(item, *operatorStack)) {
+            operatorStack->push(item);
+        } else{
+            while (shouldReorganize(item, *operatorStack)) {
+                char lastOperator = operatorStack->pop();
+                if (lastOperator != '(' && lastOperator != ')' ){
+                    operandStack->push(lastOperator);
+                }
+            }
+            if (item != '(' && item != ')' ){
                 operatorStack->push(item);
-            } else{
-                solveLastExpression(*operatorStack, *operandStack, inFixStack, item);
             }
         }
-        if (i == (dumbSolution-1) && !operatorStack->isEmpty()) {
-            item = operatorStack->pop();
-            solveLastExpression(*operatorStack, *operandStack, inFixStack, item);
+    }
+    while (!operatorStack->isEmpty()) {
+        char lastOperator = operatorStack->pop();
+        if (lastOperator != '(' && lastOperator != ')' ) {
+            operandStack->push(lastOperator);
         }
     }
-
 
     return operandStack;
 }
 
-bool PostFixExpression::operatorIsHigherLastOperator(char item, Stack<char> &operatorStack) {
+bool PostFixExpression::shouldReorganize(char item, Stack<char> &operatorStack) {
     if (operatorStack.isEmpty()){
-        return true;
+        return false;
     }
     char lastOperatorStackItem = operatorStack.pop();
 
     switch (item) {
         case '(':
             operatorStack.push(lastOperatorStackItem);
-            return true;
+            return false;
         case '~':
-            if (lastOperatorStackItem != '~'){
-                operatorStack.push(lastOperatorStackItem);
-                return true;
-            } else{
+            if (lastOperatorStackItem == '(' || lastOperatorStackItem == ')'){
                 operatorStack.push(lastOperatorStackItem);
                 return false;
+            } else{
+                operatorStack.push(lastOperatorStackItem);
+                return true;
             }
         case '&':
-            if (lastOperatorStackItem != '~' && lastOperatorStackItem != '&'){
-                operatorStack.push(lastOperatorStackItem);
-                return true;
-            } else{
+            if (lastOperatorStackItem == '(' || lastOperatorStackItem == ')' || lastOperatorStackItem == '|'){
                 operatorStack.push(lastOperatorStackItem);
                 return false;
+            } else{
+                operatorStack.push(lastOperatorStackItem);
+                return true;
             }
         case '|':
             if (lastOperatorStackItem == '(' || lastOperatorStackItem == ')') {
                 operatorStack.push(lastOperatorStackItem);
-                return true;
+                return false;
             } else {
                 operatorStack.push(lastOperatorStackItem);
-                return false;
+                return true;
             }
         case ')':
             if (lastOperatorStackItem == '(') {
-                operatorStack.push(lastOperatorStackItem);
-                return true;
+                return false;
             } else {
                 operatorStack.push(lastOperatorStackItem);
-                return false;
+                return true;
             }
         default:
             operatorStack.push(lastOperatorStackItem);
@@ -85,7 +91,7 @@ void PostFixExpression::solveLastExpression(Stack<char> &operatorStack, Stack<ch
     char lastOperator, operandOne, operandTwo, charExpressionResult;
     int intOperandOne, intOperandTwo, intExpressionResult;
 
-    bool shouldNotContinue = operatorIsHigherLastOperator(item, operatorStack) && !operatorStack.isEmpty();
+    bool shouldNotContinue = shouldReorganize(item, operatorStack) && !operatorStack.isEmpty();
 
     while (!shouldNotContinue){
         if (operatorStack.isEmpty()){
@@ -98,7 +104,7 @@ void PostFixExpression::solveLastExpression(Stack<char> &operatorStack, Stack<ch
         switch (lastOperator) {
             case '(':
                 item = inFixStack.pop();
-                shouldNotContinue = operatorIsHigherLastOperator(item, operatorStack);
+                shouldNotContinue = shouldReorganize(item, operatorStack);
                 continue;
             case '~':
                 operandOne = operandStack.pop();
@@ -109,7 +115,7 @@ void PostFixExpression::solveLastExpression(Stack<char> &operatorStack, Stack<ch
 
                 operandStack.push(charExpressionResult);
 
-                shouldNotContinue = operatorIsHigherLastOperator(item, operatorStack);
+                shouldNotContinue = shouldReorganize(item, operatorStack);
                 continue;
             case '&':
                 operandOne = operandStack.pop();
@@ -122,7 +128,7 @@ void PostFixExpression::solveLastExpression(Stack<char> &operatorStack, Stack<ch
 
                 operandStack.push(charExpressionResult);
 
-                shouldNotContinue = operatorIsHigherLastOperator(item, operatorStack);
+                shouldNotContinue = shouldReorganize(item, operatorStack);
                 continue;
             case '|':
                 operandOne = operandStack.pop();
@@ -135,7 +141,7 @@ void PostFixExpression::solveLastExpression(Stack<char> &operatorStack, Stack<ch
 
                 operandStack.push(charExpressionResult);
 
-                shouldNotContinue = operatorIsHigherLastOperator(item, operatorStack);
+                shouldNotContinue = shouldReorganize(item, operatorStack);
                 continue;
             default:
                 continue;

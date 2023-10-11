@@ -38,9 +38,6 @@ Stack<char>* InFixExpression::form(string &p, string &s) {
             char sValue = s[sCorespondentValuePosition];
             tempStak->push(sValue);
         }
-        if (pItem == ' '){
-            tempStak->push(spaceDelimiter);
-        }
         if (pItem == '~' || pItem == '&' || pItem == '|'|| pItem == '('|| pItem == ')') {
             tempStak->push(pItem);
         }
