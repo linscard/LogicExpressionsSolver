@@ -2,12 +2,9 @@
 
 PostFixExpression::PostFixExpression() = default;
 
-Stack<char> *PostFixExpression::form(Stack<char> &inFixStack) {
+void PostFixExpression::form(Stack<char> &inFixStack) {
     char spaceDelimiter = '-';
     char item;
-
-    auto* operatorStack = new Stack<char>();
-    auto* operandStack = new Stack<char>();
 
     int dumbSolution = inFixStack.size;
     for (int i = 0; i < dumbSolution; ++i) {
@@ -35,8 +32,6 @@ Stack<char> *PostFixExpression::form(Stack<char> &inFixStack) {
             operandStack->push(lastOperator);
         }
     }
-
-    return operandStack;
 }
 
 bool PostFixExpression::shouldReorganize(char item, Stack<char> &operatorStack) {
@@ -87,72 +82,79 @@ bool PostFixExpression::shouldReorganize(char item, Stack<char> &operatorStack) 
     }
 }
 
-void PostFixExpression::solveLastExpression(Stack<char> &operatorStack, Stack<char> &operandStack, Stack<char> &inFixStack,char &item) {
-    char lastOperator, operandOne, operandTwo, charExpressionResult;
-    int intOperandOne, intOperandTwo, intExpressionResult;
-
-    bool shouldNotContinue = shouldReorganize(item, operatorStack) && !operatorStack.isEmpty();
-
-    while (!shouldNotContinue){
-        if (operatorStack.isEmpty()){
-            lastOperator = item;
+void PostFixExpression::solve() {
+    invertOperandStack();
+    auto* tempOperand = new Stack<char>();
+    int stackSize = operandStack->size;
+    for (int i = 0; i < stackSize; ++i) {
+        char item = operandStack->pop();
+        if (Utils::isInteger(item)){
+            tempOperand->push(item);
         } else {
-            lastOperator = operatorStack.pop();
-        }
+            char operandOne, operandTwo, charExpressionResult;
+            int intOperandOne, intOperandTwo, intExpressionResult;
 
+            switch (item) {
+                case '~':
+                    operandOne = tempOperand->pop();
+                    intOperandOne = Utils::charToInteger(operandOne);
 
-        switch (lastOperator) {
-            case '(':
-                item = inFixStack.pop();
-                shouldNotContinue = shouldReorganize(item, operatorStack);
-                continue;
-            case '~':
-                operandOne = operandStack.pop();
-                intOperandOne = Utils::charToInteger(operandOne);
+                    intExpressionResult = !intOperandOne;
+                    charExpressionResult = Utils::integerToChar(intExpressionResult);
 
-                intExpressionResult = !intOperandOne;
-                charExpressionResult = Utils::integerToChar(intExpressionResult);
+                    tempOperand->push(charExpressionResult);
+                    continue;
 
-                operandStack.push(charExpressionResult);
+                case '&':
+                    operandOne = tempOperand->pop();
+                    operandTwo = tempOperand->pop();
+                    intOperandOne = Utils::charToInteger(operandOne);
+                    intOperandTwo = Utils::charToInteger(operandTwo);
 
-                shouldNotContinue = shouldReorganize(item, operatorStack);
-                continue;
-            case '&':
-                operandOne = operandStack.pop();
-                operandTwo = operandStack.pop();
-                intOperandOne = Utils::charToInteger(operandOne);
-                intOperandTwo = Utils::charToInteger(operandTwo);
+                    intExpressionResult = intOperandOne && intOperandTwo;
+                    charExpressionResult = Utils::integerToChar(intExpressionResult);
 
-                intExpressionResult = intOperandOne && intOperandTwo;
-                charExpressionResult = Utils::integerToChar(intExpressionResult);
+                    tempOperand->push(charExpressionResult);
+                    continue;
 
-                operandStack.push(charExpressionResult);
+                case '|':
+                    operandOne = tempOperand->pop();
+                    operandTwo = tempOperand->pop();
+                    intOperandOne = Utils::charToInteger(operandOne);
+                    intOperandTwo = Utils::charToInteger(operandTwo);
 
-                shouldNotContinue = shouldReorganize(item, operatorStack);
-                continue;
-            case '|':
-                operandOne = operandStack.pop();
-                operandTwo = operandStack.pop();
-                intOperandOne = Utils::charToInteger(operandOne);
-                intOperandTwo = Utils::charToInteger(operandTwo);
+                    intExpressionResult = intOperandOne || intOperandTwo;
+                    charExpressionResult = Utils::integerToChar(intExpressionResult);
 
-                intExpressionResult = intOperandOne || intOperandTwo;
-                charExpressionResult = Utils::integerToChar(intExpressionResult);
+                    tempOperand->push(charExpressionResult);
+                    continue;
+                default:
+                    continue;
 
-                operandStack.push(charExpressionResult);
-
-                shouldNotContinue = shouldReorganize(item, operatorStack);
-                continue;
-            default:
-                continue;
-
+            }
         }
     }
-    if (item != ')') {
-        operatorStack.push(item);
-    } else {
-        operatorStack.pop();
-    }
-
-
+    expressionResult = tempOperand->pop();
 }
+
+void PostFixExpression::invertOperandStack() {
+    auto* temp = new Stack<char>();
+    while(!operandStack->isEmpty()) {
+        char item = operandStack->pop();
+        temp->push(item);
+    }
+    auto* toDelete = new Stack<char>();
+    toDelete = operandStack;
+    operandStack = temp;
+    delete toDelete;
+}
+
+void PostFixExpression::printOperandStack() {
+    operandStack->print();
+}
+
+void PostFixExpression::printOperatorStack() {
+    operatorStack->print();
+}
+
+

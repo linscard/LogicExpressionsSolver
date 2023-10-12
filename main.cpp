@@ -24,10 +24,17 @@ int main(int argc, char* argv[]) {
     infixExp->printInverse();
 
     auto* postExp = new PostFixExpression();
-    Stack<char>* postfixExp = postExp->form(*infixExp);
-    cout << "Result: " << endl;
-    postfixExp->print();
-    cout << "test";
+    postExp->form(*infixExp);
+    cout << "Result operand stack: " << endl;
+    postExp->printOperandStack();
+    cout << "Result operator stack: " << endl;
+    postExp->printOperatorStack();
+    postExp->solve();
+    cout << "Result: " << postExp->expressionResult << endl;
+
+
+    cout << "THE END!";
+
 
 
 

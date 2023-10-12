@@ -15,30 +15,14 @@ public:
 	void print();
     void printInverse();
 	int size = 0;
-    // GPT
-    Stack(const Stack& other);
+
 
 private:
 	Node<T> *first;
 	Node<T> *last;
 };
 
-//GPT
-template <typename T>
-Stack<T>::Stack(const Stack& other) {
-    first = new Node<T>();
-    first->next = last;
-    first->previous = first;
-    last = first;
-
-    Node<T>* temp = other.first;
-    while (temp != nullptr) {
-        push(temp->item);
-        temp = temp->next;
-    }
-}
-
-//MEu
+// Definitions
 template <typename T>
 Stack<T>::Stack()
 {
@@ -60,6 +44,10 @@ Stack<T>::~Stack() {
 
 template<typename T>
 void Stack<T>::printInverse() {
+    if (isEmpty()) {
+        cout << "Stack is Empty!!" << endl;
+        return;
+    }
     auto *temp = new Node<T>;
     temp = last;
     for (int i = 0; i < size; ++i)
@@ -73,8 +61,11 @@ void Stack<T>::printInverse() {
 }
 
 template <typename T>
-void Stack<T>::print()
-{
+void Stack<T>::print() {
+    if (isEmpty()) {
+        cout << "Stack is Empty!!" << endl;
+        return;
+    }
 	auto *temp = new Node<T>;
 	temp = first;
 	for (int i = 0; i < size; ++i)
