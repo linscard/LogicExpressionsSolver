@@ -17,4 +17,8 @@ add_executable(TP1
         Utils.h
         PostFixExpression.cpp
         PostFixExpression.h
+        TreeNode.cpp
+        TreeNode.h
+        Tree.cpp
+        Tree.h
 )

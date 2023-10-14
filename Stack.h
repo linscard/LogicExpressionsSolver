@@ -8,14 +8,16 @@ class Stack
 {
 public:
 	Stack();
+    Stack(const Stack& copy);
     ~Stack();
 	void push(T item);
 	T pop();
 	bool isEmpty();
 	void print();
     void printInverse();
-	int size = 0;
 
+
+	int size = 0;
 
 private:
 	Node<T> *first;
@@ -32,6 +34,20 @@ Stack<T>::Stack()
     last = first;
 }
 
+template<typename T>
+Stack<T>::Stack(const Stack &copy) {
+    first = new Node<T>();
+    first->next = last;
+    first->previous = first;
+    last = first;
+
+    auto* current = copy.first;
+    int copySize = copy.size;
+    for (int i = 0; i < copySize; ++i) {
+        push(current->item);
+        current = current->next;
+    }
+}
 
 template<typename T>
 Stack<T>::~Stack() {

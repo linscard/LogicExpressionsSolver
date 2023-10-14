@@ -1,7 +1,6 @@
 #ifndef TP1_POSTFIXEXPRESSION_H
 #define TP1_POSTFIXEXPRESSION_H
 
-#include "Stack.h"
 #include "Utils.h"
 
 class PostFixExpression {
