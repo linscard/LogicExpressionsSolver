@@ -137,3 +137,59 @@ void Utils::invertStack(Stack<char> &stack) {
     }
     stack = *temp;
 }
+
+int Utils::getSATOperatorPosition(Stack<char> &stack, char sat) {
+    auto* temp = new Stack<char>();
+    char item;
+    int countPosition = 0;
+    while (!stack.isEmpty()) {
+        item = stack.pop();
+        countPosition += 1;
+        if (item == sat) {
+            temp->push(item);
+            break;
+        }
+        temp->push(item);
+    }
+    while (!temp->isEmpty()) {
+        item = temp->pop();
+        stack.push(item);
+    }
+    return countPosition;
+}
+
+void Utils::changeStackItem(Stack<char> &stack, char itemToChange, int position) {
+    auto* temp = new Stack<char>();
+    int countPosition = 0;
+    char item;
+    while (!stack.isEmpty()) {
+        item = stack.pop();
+        countPosition += 1;
+        if (countPosition == position) {
+            temp->push(itemToChange);
+            break;
+        }
+        temp->push(item);
+    }
+    while (!temp->isEmpty()) {
+        item = temp->pop();
+        stack.push(item);
+    }
+}
+
+Stack<char> *Utils::getStringResponse(Stack<char> &stack) {
+    auto* response = new Stack<char>();
+    auto* temp = new Stack<char>();
+    while (!stack.isEmpty()) {
+        char item = stack.pop();
+        if (item == '0' || item == '1' || item == 'a') {
+            response->push(item);
+        }
+        temp->push(item);
+    }
+    while (!temp->isEmpty()) {
+        char item = temp->pop();
+        stack.push(item);
+    }
+    return response;
+}

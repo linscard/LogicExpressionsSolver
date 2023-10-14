@@ -13,44 +13,22 @@ int main(int argc, char* argv[]) {
 
     checkEntryArgs(p, s);
 
-    cout << "Args:" << endl;
-    cout << p << endl;
-    cout << s << endl;
-
-
-
-
     auto* exp = new InFixExpression();
     Stack<char>* infixExp = exp->form(p, s);
-    cout << "Expression in infix:" << endl;
-    infixExp->printInverse();
-    auto* copyInfixExp = new Stack<char>(*infixExp);
-    cout << "Result copyInfixExp stack: " << endl;
-    copyInfixExp->print();
 
-    char* array = Utils::copyStackToArray(*infixExp);
-
-    auto* satTree = new Tree;
-    satTree->grow(*copyInfixExp);
-
-
-    auto* postExp = new PostFixExpression();
-
-    postExp->form(*infixExp);
-    cout << "Result operand stack: " << endl;
-    postExp->printOperandStack();
-    cout << "Result operator stack: " << endl;
-    postExp->printOperatorStack();
-    postExp->solve();
-    cout << postExp->expressionResult << endl;
-
-
-
-
-
-
-
-
-
+    if (programType == "a") {
+        auto* postExp = new PostFixExpression();
+        postExp->form(*infixExp);
+        postExp->solve();
+        cout << postExp->expressionResult << endl;
+    } else if (programType == "s") {
+        auto* satTree = new Tree;
+        satTree->grow(*infixExp);
+        cout << satTree->treeResponse << ' ';
+        if (satTree->treeResponse == '1'){
+            Stack<char>* response = Utils::getStringResponse(*satTree->possibleResponse);
+            response->print();
+        }
+    }
     return 0;
 }

@@ -16,18 +16,20 @@ public:
     }
 
     void grow(Stack<char> &item) {
+        auto* possibelItemToRespond = new Stack<char>(item);
+        possibleResponse = possibelItemToRespond;
         recursivePush(item, *root);
     }
 
-    void walk();
+    Stack<char>* possibleResponse;
+    char treeResponse;
 
 
 private:
-    Stack<char>* possibleResponse;
     void recursivePush(Stack<char> &item, TreeNode &newRoot) {
-        auto* copyOfItem = new Stack<char>(item);
+        auto* newItem = new Stack<char>(item);
 
-        newRoot.item = copyOfItem;
+        newRoot.item = newItem;
         newRoot.nodeType = Utils::getSATOperator(item);
 
         if (newRoot.nodeType == 's'){
@@ -35,6 +37,7 @@ private:
             postExp->form(*newRoot.item);
             postExp->solve();
             newRoot.nodeIsTrue = postExp->expressionResult;
+            treeResponse = newRoot.nodeIsTrue;
             return;
         } else {
             auto* itemWhitTrue = new Stack<char>(item);
@@ -52,15 +55,27 @@ private:
 
         char rightChildResult = newRoot.right->nodeIsTrue;
         char leftChildResult = newRoot.left->nodeIsTrue;
-        char intRightChildResult = Utils::charToInteger(rightChildResult);
-        char intLeftChildResult = Utils::charToInteger(leftChildResult);
+        int intRightChildResult = Utils::charToInteger(rightChildResult);
+        int intLeftChildResult = Utils::charToInteger(leftChildResult);
 
         if (newRoot.nodeType == 'a') {
             int result = intRightChildResult && intLeftChildResult;
             newRoot.nodeIsTrue = Utils::integerToChar(result);
+            treeResponse = newRoot.nodeIsTrue;
         } else if (newRoot.nodeType == 'e') {
             int result = intRightChildResult || intLeftChildResult;
             newRoot.nodeIsTrue = Utils::integerToChar(result);
+            treeResponse = newRoot.nodeIsTrue;
+            if (result) {
+                int ePosition = Utils::getSATOperatorPosition(*newRoot.item, 'e');
+                if (intRightChildResult && intLeftChildResult){
+                    Utils::changeStackItem(*possibleResponse, 'a', ePosition);
+                } else if (intRightChildResult) {
+                    Utils::changeStackItem(*possibleResponse, '1', ePosition);
+                } else {
+                    Utils::changeStackItem(*possibleResponse, '0', ePosition);
+                }
+            }
         }
     }
 

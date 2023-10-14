@@ -86,7 +86,7 @@ void Stack<T>::print() {
 	temp = first;
 	for (int i = 0; i < size; ++i)
 	{
-		cout << temp->item << " ";
+		cout << temp->item;
 		temp = temp->next;
 	}
 	cout << endl;

@@ -16,6 +16,9 @@ public:
     static void satToBool (Stack<char> &stack, char boolChar);
     static char* copyStackToArray(Stack<char> &stack);
     static void invertStack(Stack<char> &stack);
+    static int getSATOperatorPosition(Stack<char> &stack, char sat);
+    static void changeStackItem(Stack<char> &stack, char itemToChange, int position);
+    static Stack<char>* getStringResponse(Stack<char> &stack);
 };
 
 
