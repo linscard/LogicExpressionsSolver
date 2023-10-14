@@ -16,12 +16,12 @@ int main(int argc, char* argv[]) {
     auto* exp = new InFixExpression();
     Stack<char>* infixExp = exp->form(p, s);
 
-    if (programType == "a") {
+    if (programType == "-a") {
         auto* postExp = new PostFixExpression();
         postExp->form(*infixExp);
         postExp->solve();
         cout << postExp->expressionResult << endl;
-    } else if (programType == "s") {
+    } else if (programType == "-s") {
         auto* satTree = new Tree;
         satTree->grow(*infixExp);
         cout << satTree->treeResponse << ' ';

@@ -57,11 +57,20 @@ Stack<char>* InFixExpression::form(string &p, string &s) {
         if (firstItem == '~' && !tempStak->isEmpty()) {
             countNot += 1;
             secondItem = tempStak->pop();
-            while (secondItem == '~' && !tempStak->isEmpty() ) {
+            if (secondItem == '~') {
                 countNot += 1;
-                secondItem = tempStak->pop();
+                while (secondItem == '~' && !tempStak->isEmpty() ) {
+                    secondItem = tempStak->pop();
+                    if (secondItem == '~'){
+                        countNot += 1;
+                    }
+                }
             }
-            tempStak->push(secondItem);
+            if (secondItem != '~'){
+                tempStak->push(secondItem);
+            }
+
+
         }
         if (countNot == 0 || countNot%2 != 0) {
             response->push(firstItem);
