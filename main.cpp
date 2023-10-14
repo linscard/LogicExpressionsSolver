@@ -24,21 +24,25 @@ int main(int argc, char* argv[]) {
     Stack<char>* infixExp = exp->form(p, s);
     cout << "Expression in infix:" << endl;
     infixExp->printInverse();
+    auto* copyInfixExp = new Stack<char>(*infixExp);
+    cout << "Result copyInfixExp stack: " << endl;
+    copyInfixExp->print();
 
     char* array = Utils::copyStackToArray(*infixExp);
 
-    auto* satTree = new Tree<char>;
-    satTree->push(array);
+    auto* satTree = new Tree;
+    satTree->grow(*copyInfixExp);
 
-//
-//    auto* postExp = new PostFixExpression();
-//    postExp->form(*infixExp);
-//    cout << "Result operand stack: " << endl;
-//    postExp->printOperandStack();
-//    cout << "Result operator stack: " << endl;
-//    postExp->printOperatorStack();
-//    postExp->solve();
-//    cout << postExp->expressionResult << endl;
+
+    auto* postExp = new PostFixExpression();
+
+    postExp->form(*infixExp);
+    cout << "Result operand stack: " << endl;
+    postExp->printOperandStack();
+    cout << "Result operator stack: " << endl;
+    postExp->printOperatorStack();
+    postExp->solve();
+    cout << postExp->expressionResult << endl;
 
 
 

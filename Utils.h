@@ -13,8 +13,9 @@ public:
     static char integerToChar(char value);
     static int power (int base, int exp);
     static char getSATOperator (Stack<char> &stack);
-    static Stack<char>* satToBool (Stack<char> &stack, char boolChar);
+    static void satToBool (Stack<char> &stack, char boolChar);
     static char* copyStackToArray(Stack<char> &stack);
+    static void invertStack(Stack<char> &stack);
 };
 
 

@@ -1,67 +1,71 @@
 #include "TreeNode.h"
 #include "Utils.h"
+#include "PostFixExpression.h"
 
 #ifndef TP1_TREE_H
 #define TP1_TREE_H
 
 class Tree {
 public:
-    Tree();
+    Tree() {
+        root = new TreeNode();
+    }
 
-    Tree();
-    ~Tree();
+    ~Tree() {
+        delete root;
+    }
 
-    void push(char &item);
+    void grow(Stack<char> &item) {
+        recursivePush(item, *root);
+    }
+
     void walk();
 
 
 private:
-    void recursivePush(char &item);
+    Stack<char>* possibleResponse;
+    void recursivePush(Stack<char> &item, TreeNode &newRoot) {
+        auto* copyOfItem = new Stack<char>(item);
 
+        newRoot.item = copyOfItem;
+        newRoot.nodeType = Utils::getSATOperator(item);
 
-TreeNode<char*> *root = nullptr;
-};
+        if (newRoot.nodeType == 's'){
+            auto* postExp = new PostFixExpression();
+            postExp->form(*newRoot.item);
+            postExp->solve();
+            newRoot.nodeIsTrue = postExp->expressionResult;
+            return;
+        } else {
+            auto* itemWhitTrue = new Stack<char>(item);
+            Utils::satToBool(*itemWhitTrue, '1');
 
-template<typename T>
-void Tree::push(char &item) {
-    char satOperator = Utils::getSATOperator(item);
-    root = new TreeNode<T>;
-    root->item = *new Stack<char>(item);
-    root->nodeType = satOperator;
-    recursivePush(item);
-}
+            auto* itemWhitFalse = new Stack<char>(item);
+            Utils::satToBool(*itemWhitFalse, '0');
 
-// Definitions
-template<typename T>
-void Tree::recursivePush(T &item) {
-    char satOperator = Utils::getSATOperator(item);
+            newRoot.right = new TreeNode();
+            recursivePush(*itemWhitTrue, *newRoot.right);
 
-    if (satOperator != 's') {
-        auto* stackWithFalse = new Stack<char>(item);
-        auto* stackWithTrue = new Stack<char>(item);
-        Utils::satToBool(*stackWithFalse, '0');
-        stackWithTrue = Utils::satToBool(*stackWithTrue, '1');
-        root->left = new TreeNode<T>;;
-        root->right = new TreeNode<T>;;
-        root->left->item = *stackWithFalse;
-        root->right->item = *stackWithTrue;
+            newRoot.left = new TreeNode();
+            recursivePush(*itemWhitFalse, *newRoot.left);
+        }
 
-//        recursivePush(stackWithFalse);
-//        recursivePush(stackWithTrue);
-    } else {
-        return;
+        char rightChildResult = newRoot.right->nodeIsTrue;
+        char leftChildResult = newRoot.left->nodeIsTrue;
+        char intRightChildResult = Utils::charToInteger(rightChildResult);
+        char intLeftChildResult = Utils::charToInteger(leftChildResult);
+
+        if (newRoot.nodeType == 'a') {
+            int result = intRightChildResult && intLeftChildResult;
+            newRoot.nodeIsTrue = Utils::integerToChar(result);
+        } else if (newRoot.nodeType == 'e') {
+            int result = intRightChildResult || intLeftChildResult;
+            newRoot.nodeIsTrue = Utils::integerToChar(result);
+        }
     }
-}
 
-//template<typename T>
-//void Tree<T>::push(Stack<char> item) {
-//    recursivePush(&item, *root);
-//}
 
-template<typename T>
-Tree::Tree() {
-    root = nullptr;
-}
-
+    TreeNode *root = nullptr;
+};
 
 #endif //TP1_TREE_H

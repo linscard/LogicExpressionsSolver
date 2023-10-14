@@ -92,7 +92,7 @@ char Utils::getSATOperator(Stack<char> &stack) {
     return SATitem;
 }
 
-Stack<char>*  Utils::satToBool(Stack<char> &stack, char boolChar) {
+void Utils::satToBool(Stack<char> &stack, char boolChar) {
     auto* temp = new Stack<char>();
     char item;
 
@@ -127,4 +127,13 @@ char* Utils::copyStackToArray(Stack<char> &stack) {
     }
 
     return response;
+}
+
+void Utils::invertStack(Stack<char> &stack) {
+    auto* temp = new Stack<char>();
+    while (!stack.isEmpty()) {
+        char item = stack.pop();
+        temp->push(item);
+    }
+    stack = *temp;
 }
