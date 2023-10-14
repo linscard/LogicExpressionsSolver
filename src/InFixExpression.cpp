@@ -1,4 +1,4 @@
-#include "InFixExpression.h"
+#include "../include/InFixExpression.h"
 
 
 Stack<char>* InFixExpression::form(string &p, string &s) {

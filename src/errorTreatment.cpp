@@ -1,4 +1,4 @@
-#include "errorTreatment.h"
+#include "../include/errorTreatment.h"
 
 void checkEntryArgs(string p, string s) {
     int pSize = p.size();

@@ -1,10 +1,10 @@
 #include <iostream>
 #include <stdexcept>
-#include "Stack.h"
-#include "errorTreatment.h"
-#include "InFixExpression.h"
-#include "PostFixExpression.h"
-#include "Tree.h"
+#include "../include/Stack.h"
+#include "../include/errorTreatment.h"
+#include "../include/InFixExpression.h"
+#include "../include/PostFixExpression.h"
+#include "../include/Tree.h"
 
 int main(int argc, char* argv[]) {
     string programType = argv[1];

@@ -4,21 +4,21 @@ project(TP1)
 set(CMAKE_CXX_STANDARD 17)
 
 add_executable(TP1
-        Stack.cpp
-        Stack.h
-        main.cpp
-        Node.cpp
-        Node.h
-        errorTreatment.cpp
-        errorTreatment.h
-        InFixExpression.cpp
-        InFixExpression.h
-        Utils.cpp
-        Utils.h
-        PostFixExpression.cpp
-        PostFixExpression.h
-        TreeNode.cpp
-        TreeNode.h
-        Tree.cpp
-        Tree.h
+        src/Stack.cpp
+        include/Stack.h
+        src/main.cpp
+        src/Node.cpp
+        include/Node.h
+        src/errorTreatment.cpp
+        include/errorTreatment.h
+        src/InFixExpression.cpp
+        include/InFixExpression.h
+        src/Utils.cpp
+        include/Utils.h
+        src/PostFixExpression.cpp
+        include/PostFixExpression.h
+        src/TreeNode.cpp
+        include/TreeNode.h
+        src/Tree.cpp
+        include/Tree.h
 )
