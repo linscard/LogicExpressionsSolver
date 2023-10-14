@@ -437,9 +437,6 @@ Stack<char>* InFixExpression::form(string &p, string &s) {
 
     auto* response = new Stack<char>();
 
-
-
-
     char firstItem, secondItem;
     int countNot;
 
@@ -449,11 +446,20 @@ Stack<char>* InFixExpression::form(string &p, string &s) {
         if (firstItem == '~' && !tempStak->isEmpty()) {
             countNot += 1;
             secondItem = tempStak->pop();
-            while (secondItem == '~' && !tempStak->isEmpty() ) {
+            if (secondItem == '~') {
                 countNot += 1;
-                secondItem = tempStak->pop();
+                while (secondItem == '~' && !tempStak->isEmpty() ) {
+                    secondItem = tempStak->pop();
+                    if (secondItem == '~'){
+                        countNot += 1;
+                    }
+                }
             }
-            tempStak->push(secondItem);
+            if (secondItem != '~'){
+                tempStak->push(secondItem);
+            }
+
+
         }
         if (countNot == 0 || countNot%2 != 0) {
             response->push(firstItem);
@@ -775,12 +781,12 @@ int main(int argc, char* argv[]) {
     auto* exp = new InFixExpression();
     Stack<char>* infixExp = exp->form(p, s);
 
-    if (programType == "a") {
+    if (programType == "-a") {
         auto* postExp = new PostFixExpression();
         postExp->form(*infixExp);
         postExp->solve();
         cout << postExp->expressionResult << endl;
-    } else if (programType == "s") {
+    } else if (programType == "-s") {
         auto* satTree = new Tree;
         satTree->grow(*infixExp);
         cout << satTree->treeResponse << ' ';

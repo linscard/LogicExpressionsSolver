@@ -4,5 +4,5 @@ project(TP1)
 set(CMAKE_CXX_STANDARD 17)
 
 add_executable(TP1
-        src/main.cpp
+        TP/main.cpp
 )
