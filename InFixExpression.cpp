@@ -38,22 +38,36 @@ Stack<char>* InFixExpression::form(string &p, string &s) {
             char sValue = s[sCorespondentValuePosition];
             tempStak->push(sValue);
         }
-        if (pItem == ' '){
-            tempStak->push(spaceDelimiter);
-        }
         if (pItem == '~' || pItem == '&' || pItem == '|'|| pItem == '('|| pItem == ')') {
             tempStak->push(pItem);
         }
     }
 
     auto* response = new Stack<char>();
-    int dumbCount = tempStak->size;
-    for (int i = 0; i < dumbCount; ++i) {
-        char temp = tempStak->pop();
-        response->push(temp);
+
+
+
+
+    char firstItem, secondItem;
+    int countNot;
+
+    while (!tempStak->isEmpty()) {
+        countNot = 0;
+        firstItem = tempStak->pop();
+        if (firstItem == '~' && !tempStak->isEmpty()) {
+            countNot += 1;
+            secondItem = tempStak->pop();
+            while (secondItem == '~' && !tempStak->isEmpty() ) {
+                countNot += 1;
+                secondItem = tempStak->pop();
+            }
+            tempStak->push(secondItem);
+        }
+        if (countNot == 0 || countNot%2 != 0) {
+            response->push(firstItem);
+        }
     }
     delete tempStak;
     return response;
 }
-
 

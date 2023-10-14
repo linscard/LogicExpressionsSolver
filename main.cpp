@@ -4,35 +4,31 @@
 #include "errorTreatment.h"
 #include "InFixExpression.h"
 #include "PostFixExpression.h"
-
+#include "Tree.h"
 
 int main(int argc, char* argv[]) {
-    string p = argv[1];
-    string s = argv[2];
+    string programType = argv[1];
+    string p = argv[2];
+    string s = argv[3];
 
     checkEntryArgs(p, s);
 
-    int pSize = p.size();
-    int sSize = s.size();
-    cout << "Args:" << endl;
-    cout << p << endl;
-    cout << s << endl;
-
     auto* exp = new InFixExpression();
     Stack<char>* infixExp = exp->form(p, s);
-    cout << "Expression in infix:" << endl;
-    infixExp->printInverse();
 
-    auto* postExp = new PostFixExpression();
-    Stack<char>* postfixExp = postExp->form(*infixExp);
-    cout << "Result: " << endl;
-    postfixExp->print();
-
-
-
-
-
-
-
+    if (programType == "a") {
+        auto* postExp = new PostFixExpression();
+        postExp->form(*infixExp);
+        postExp->solve();
+        cout << postExp->expressionResult << endl;
+    } else if (programType == "s") {
+        auto* satTree = new Tree;
+        satTree->grow(*infixExp);
+        cout << satTree->treeResponse << ' ';
+        if (satTree->treeResponse == '1'){
+            Stack<char>* response = Utils::getStringResponse(*satTree->possibleResponse);
+            response->print();
+        }
+    }
     return 0;
 }

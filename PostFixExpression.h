@@ -1,17 +1,26 @@
 #ifndef TP1_POSTFIXEXPRESSION_H
 #define TP1_POSTFIXEXPRESSION_H
 
-#include "Stack.h"
 #include "Utils.h"
 
 class PostFixExpression {
 public:
 
     PostFixExpression();
-    Stack<char>* form(Stack<char> &inFixExp);
+    void form(Stack<char> &inFixExp);
+    void solve();
+    void printOperatorStack();
+    void printOperandStack();
+    char expressionResult;
+
+
 private:
-    bool operatorIsHigherLastOperator(char item, Stack<char> &operatorStack);
-    void solveLastExpression(Stack<char> &operatorStack, Stack<char> &operandStack, Stack<char> &inFixStack,char &item);
+    void invertOperandStack();
+
+    bool shouldReorganize(char item, Stack<char> &operatorStack);
+
+    Stack<char>* operatorStack = new Stack<char>();
+    Stack<char>* operandStack = new Stack<char>();
 
 };
 

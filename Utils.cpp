@@ -71,3 +71,125 @@ char Utils::integerToChar(char value) {
             return '~';
     }
 }
+
+char Utils::getSATOperator(Stack<char> &stack) {
+    auto* temp = new Stack<char>();
+    char item;
+    char SATitem = 's';
+    while (!stack.isEmpty()) {
+        item = stack.pop();
+        if (item == 'a' || item == 'e') {
+            SATitem = item;
+            temp->push(item);
+            break;
+        }
+        temp->push(item);
+    }
+    while (!temp->isEmpty()) {
+        item = temp->pop();
+        stack.push(item);
+    }
+    return SATitem;
+}
+
+void Utils::satToBool(Stack<char> &stack, char boolChar) {
+    auto* temp = new Stack<char>();
+    char item;
+
+    while (!stack.isEmpty()) {
+        item = stack.pop();
+        if (item == 'a' || item == 'e') {
+            temp->push(boolChar);
+            break;
+        }
+        temp->push(item);
+    }
+    while (!temp->isEmpty()) {
+        item = temp->pop();
+        stack.push(item);
+    }
+}
+
+char* Utils::copyStackToArray(Stack<char> &stack) {
+    int stackSize = stack.size;
+    auto* temp = new Stack<char>();
+    char* response = new char[stackSize];
+
+    for (int i = 0; i < stackSize; ++i) {
+        char item = stack.pop();
+        response[i] = item;
+        temp->push(item);
+    }
+
+    while (!temp->isEmpty()) {
+        char item = temp->pop();
+        stack.push(item);
+    }
+
+    return response;
+}
+
+void Utils::invertStack(Stack<char> &stack) {
+    auto* temp = new Stack<char>();
+    while (!stack.isEmpty()) {
+        char item = stack.pop();
+        temp->push(item);
+    }
+    stack = *temp;
+}
+
+int Utils::getSATOperatorPosition(Stack<char> &stack, char sat) {
+    auto* temp = new Stack<char>();
+    char item;
+    int countPosition = 0;
+    while (!stack.isEmpty()) {
+        item = stack.pop();
+        countPosition += 1;
+        if (item == sat) {
+            temp->push(item);
+            break;
+        }
+        temp->push(item);
+    }
+    while (!temp->isEmpty()) {
+        item = temp->pop();
+        stack.push(item);
+    }
+    return countPosition;
+}
+
+void Utils::changeStackItem(Stack<char> &stack, char itemToChange, int position) {
+    auto* temp = new Stack<char>();
+    int countPosition = 0;
+    char item;
+    while (!stack.isEmpty()) {
+        item = stack.pop();
+        countPosition += 1;
+        if (countPosition == position) {
+            temp->push(itemToChange);
+            break;
+        }
+        temp->push(item);
+    }
+    while (!temp->isEmpty()) {
+        item = temp->pop();
+        stack.push(item);
+    }
+}
+
+Stack<char> *Utils::getStringResponse(Stack<char> &stack) {
+    auto* response = new Stack<char>();
+    auto* temp = new Stack<char>();
+    while (!stack.isEmpty()) {
+        char item = stack.pop();
+        if (item == '0' || item == '1' || item == 'a') {
+            response->push(item);
+        }
+        temp->push(item);
+    }
+    while (!temp->isEmpty()) {
+        char item = temp->pop();
+        stack.push(item);
+    }
+    return response;
+}
