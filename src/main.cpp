@@ -167,7 +167,6 @@ T Stack<T>::pop()
         return T();
     }
     T valorlast = last->item;
-    Node<T> *temp = last;
     last = last->previous;
     last->next = nullptr;
     size--;
@@ -398,12 +397,9 @@ public:
 
 ////////////////////////////////////////////////// InFixExpression.cpp content  //////////////////////////////////////////////////
 Stack<char>* InFixExpression::form(string &p, string &s) {
-    char spaceDelimiter = '-';
-
     auto* tempStak = new Stack<char>();
 
     int pSize = p.size();
-    int sSize = s.size();
 
     for (int i = 0; i < pSize; i++) {
         char pItem = p[i];
@@ -496,7 +492,6 @@ private:
 PostFixExpression::PostFixExpression() = default;
 
 void PostFixExpression::form(Stack<char> &inFixStack) {
-    char spaceDelimiter = '-';
     char item;
 
     int dumbSolution = inFixStack.size;
